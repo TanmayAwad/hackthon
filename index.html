@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusCode — Hackathon Arena</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{colors:{brand:'#6D28D9',brandDark:'#5B21B6',lime:'#B8E62E',ink:'#101010',muted:'#6B7280',bg:'#F7F7F3'},fontFamily:{sans:['Inter','sans-serif'],display:['Plus Jakarta Sans','sans-serif']},boxShadow:{soft:'0 10px 40px rgba(0,0,0,.07)',lift:'0 20px 45px rgba(109,40,217,.14)'}}}}
+</script>
+<style>
+*{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#F7F7F3;color:#101010;-webkit-font-smoothing:antialiased}
+.font-display{font-family:'Plus Jakarta Sans',sans-serif}
+.page{display:none}
+.page.active{display:block;animation:pageIn .55s cubic-bezier(.22,1,.36,1)}
+@keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes slideUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.reveal{opacity:0;animation:slideUp .8s cubic-bezier(.22,1,.36,1) forwards}
+.d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}.d4{animation-delay:.32s}.d5{animation-delay:.4s}.d6{animation-delay:.48s}
+.card-hover{transition:all .35s cubic-bezier(.22,1,.36,1)}
+.card-hover:hover{transform:translateY(-5px);box-shadow:0 22px 45px rgba(0,0,0,.09);border-color:#ddd6fe}
+.btn-primary{transition:all .25s ease}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(109,40,217,.28)}
+.btn-primary:active{transform:translateY(0) scale(.98)}
+.btn-secondary{transition:all .25s ease}
+.btn-secondary:hover{transform:translateY(-2px);background:#101010;color:white}
+.input{width:100%;background:white;border:1.5px solid #E5E7EB;border-radius:14px;padding:13px 15px;font-size:14px;outline:none;transition:all .25s ease}
+.input:focus{border-color:#6D28D9;box-shadow:0 0 0 4px rgba(109,40,217,.12);transform:translateY(-1px)}
+.input.err{border-color:#EF4444;box-shadow:0 0 0 4px rgba(239,68,68,.1)}
+label{font-size:12px;font-weight:600;letter-spacing:.02em;color:#374151}
+.sidebar-item{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:11px;font-size:13.5px;font-weight:500;color:#4B5563;cursor:pointer;transition:all .22s ease;position:relative;white-space:nowrap}
+.sidebar-item:hover{background:#F3F0FF;color:#6D28D9;transform:translateX(3px)}
+.sidebar-item.active{background:#DFF7A6;color:#101010;font-weight:700}
+.sidebar-item.active:before{content:'';position:absolute;left:-14px;top:8px;bottom:8px;width:4px;border-radius:99px;background:#B8E62E}
+.sidebar-item svg{width:18px;height:18px;flex-shrink:0}
+.dash-section{display:none}
+.dash-section.active{display:block;animation:pageIn .5s ease}
+.float-anim{animation:floatY 5s ease-in-out infinite}
+.float-anim2{animation:floatY 6s ease-in-out infinite;animation-delay:1s}
+.dot-grid{background-image:radial-gradient(#d1d5db 1px,transparent 1px);background-size:18px 18px}
+.soft-grid{background-image:linear-gradient(#ffffff 1px,transparent 1px),linear-gradient(90deg,#ffffff 1px,transparent 1px);background-size:42px 42px}
+.scrollbar-hide::-webkit-scrollbar{display:none}
+.toast{animation:slideUp .4s ease}
+.pill{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 9px;border-radius:99px}
+.progress{height:8px;background:#EEE;border-radius:99px;overflow:hidden}
+.progress>div{height:100%;border-radius:99px}
+details summary::-webkit-details-marker{display:none}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toastWrap" class="fixed bottom-5 right-5 z-[100] space-y-3"></div>
+
+<!-- ============ LANDING PAGE ============ -->
+<section id="page-landing" class="page active">
+  <!-- NAV -->
+  <header class="sticky top-0 z-50 bg-[#F7F7F3]/85 backdrop-blur-xl border-b border-black/5">
+    <div class="max-w-7xl mx-auto px-5 lg:px-8 h-[76px] flex items-center justify-between">
+      <!-- LOGO -->
+      <a href="#" onclick="showPage('landing');return false" class="flex items-center gap-3 shrink-0">
+        <div class="flex items-end gap-[4px]"><span style="width:7px;height:34px;background:#101010;border-radius:2px;transform:skewX(-14deg);display:block"></span><span style="width:7px;height:34px;background:#6D28D9;border-radius:2px;transform:skewX(-14deg);display:block"></span><span style="width:7px;height:34px;background:#84CC16;border-radius:2px;transform:skewX(-14deg);display:block"></span></div>
+        <div class="leading-none"><div class="font-display font-black text-[19px] tracking-tight text-black">CAMPUSCODE</div><div class="text-[8.5px] tracking-[0.38em] font-semibold text-gray-500 mt-[3px]">HACKATHON ARENA</div></div>
+      </a>
+      <nav class="hidden md:flex items-center gap-8 text-[13.5px] font-medium text-gray-600">
+        <a href="#features" class="hover:text-black">Features</a><a href="#workflow" class="hover:text-black">How it works</a><a href="#events-preview" class="hover:text-black">Events</a><a href="#cta" class="hover:text-black">Join</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <button onclick="showPage('login')" class="hidden sm:block text-[13.5px] font-semibold px-4 py-2">Log in</button>
+        <button onclick="showPage('register')" class="btn-primary bg-black text-white text-[13.5px] font-semibold px-5 py-2.5 rounded-full">Create account</button>
+        <button class="md:hidden text-2xl px-2" onclick="document.getElementById('mobileMenu').classList.toggle('hidden')">☰</button>
+      </div>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden px-5 pb-4 flex gap-4 text-sm font-medium bg-white border-t"><a href="#features">Features</a><a href="#workflow">Workflow</a><a href="#events-preview">Events</a><button onclick="showPage('login')" class="font-bold text-brand">Login</button></div>
+  </header>
+
+  <!-- HERO -->
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 pt-10 lg:pt-16 pb-8">
+    <div class="grid lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+      <div class="lg:col-span-6">
+        <div class="reveal inline-flex items-center gap-2 bg-white border border-black/5 rounded-full pl-1 pr-3 py-1 text-xs font-semibold shadow-soft"><span class="bg-lime text-black px-2.5 py-1 rounded-full text-[11px]">NEW SEASON</span> Campus Hackathon 2026 registrations open <span class="text-brand">→</span></div>
+        <h1 class="reveal d1 font-display font-black text-[46px] sm:text-[64px] lg:text-[74px] leading-[0.95] tracking-[-0.03em] mt-6">Build. Compete.<br><span class="text-brand">Showcase</span> what<br>you can create.</h1>
+        <p class="reveal d2 text-gray-600 text-[16px] lg:text-[18px] leading-relaxed mt-6 max-w-[520px]">CampusCode is the arena where students discover events, form teams, validate ideas and ship real products — together, on campus, at speed.</p>
+        <div class="reveal d3 flex flex-wrap gap-3 mt-8">
+          <button onclick="showPage('login')" class="btn-primary bg-brand text-white font-semibold px-7 py-4 rounded-full text-[15px] flex items-center gap-2">Continue to Login <span>→</span></button>
+          <button onclick="showPage('register')" class="btn-secondary bg-white border border-black/10 font-semibold px-7 py-4 rounded-full text-[15px]">Create free account</button>
+        </div>
+        <div class="reveal d4 flex items-center gap-6 mt-8 text-sm">
+          <div class="flex -space-x-3">
+            <img class="w-9 h-9 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop">
+            <img class="w-9 h-9 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop">
+            <img class="w-9 h-9 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop">
+            <span class="w-9 h-9 rounded-full bg-black text-white text-[11px] font-bold flex items-center justify-center border-2 border-white">12k</span>
+          </div>
+          <p class="text-gray-600"><b class="text-black">12,400+ students</b> building this semester</p>
+        </div>
+        <div class="reveal d5 grid grid-cols-3 gap-4 mt-10 max-w-[520px]">
+          <div><p class="font-display font-extrabold text-2xl">120+</p><p class="text-xs text-gray-500 mt-1">Events hosted</p></div>
+          <div><p class="font-display font-extrabold text-2xl">8,500</p><p class="text-xs text-gray-500 mt-1">Projects shipped</p></div>
+          <div><p class="font-display font-extrabold text-2xl">340+</p><p class="text-xs text-gray-500 mt-1">Campus partners</p></div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-6 relative reveal d2">
+        <div class="absolute -top-6 -right-2 w-72 h-72 bg-lime/40 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-8 -left-4 w-80 h-80 bg-brand/20 rounded-full blur-3xl"></div>
+        <div class="relative bg-white rounded-[28px] border border-black/5 shadow-lift overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1000&h=700&fit=crop" class="w-full h-[380px] sm:h-[460px] object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+          <div class="absolute bottom-5 left-5 right-5 text-white">
+            <span class="pill bg-lime text-black">Live Hackathon</span>
+            <h3 class="font-display font-bold text-[22px] leading-tight mt-3">Innovate Campus Challenge<br>36 hours · 4,200 builders</h3>
+          </div>
+          <div class="absolute top-4 right-4 bg-white rounded-2xl px-3 py-2 flex items-center gap-2 shadow-soft text-xs font-semibold"><span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> 1,284 online now</div>
+        </div>
+        <!-- floating cards -->
+        <div class="float-anim absolute -left-3 sm:-left-8 top-10 bg-white rounded-2xl shadow-lift border p-3.5 flex items-center gap-3 w-[210px]">
+          <div class="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center text-lg">✓</div>
+          <div><p class="text-xs font-bold">Idea validated</p><p class="text-[11px] text-gray-500">IdeaCheck AI · 92/100</p></div>
+        </div>
+        <div class="float-anim2 absolute -right-2 sm:-right-5 bottom-16 bg-black text-white rounded-2xl shadow-lift p-3.5 w-[200px]">
+          <p class="text-[11px] text-white/60">TEAM FORMED</p><p class="font-bold text-sm mt-1">Pixel Squad · 4 members</p>
+          <div class="flex gap-1 mt-2"><span class="h-1.5 flex-1 bg-lime rounded-full"></span><span class="h-1.5 flex-1 bg-lime rounded-full"></span><span class="h-1.5 flex-1 bg-white/20 rounded-full"></span></div>
+        </div>
+        <div class="absolute left-6 -bottom-5 bg-white rounded-full shadow-lift px-4 py-2.5 flex items-center gap-2 text-xs font-semibold"><span class="text-brand">◆</span> Certificate earned · Top 10%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGO STRIP -->
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 py-6 reveal"><div class="bg-white border border-black/5 rounded-2xl px-6 py-4 flex flex-wrap justify-between gap-4 text-[13px] font-bold tracking-wide text-gray-400"><span>● INNOVATE 2026</span><span>◆ CAMPUS+</span><span>▲ CODEFORGE</span><span>■ BUILDERS CLUB</span><span>● NEXTGEN</span><span class="hidden sm:inline">◆ STUDENT LAB</span></div></div>
+
+  <!-- FEATURES -->
+  <div id="features" class="max-w-7xl mx-auto px-5 lg:px-8 py-14">
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-8">
+      <div><p class="text-xs font-bold tracking-[0.2em] text-brand">PLATFORM</p><h2 class="font-display font-extrabold text-[36px] lg:text-[44px] leading-none tracking-tight mt-2">Everything you need to<br>go from idea to demo.</h2></div>
+      <p class="text-gray-600 max-w-sm text-[15px] leading-relaxed">One workspace for discovery, teamwork, building and recognition — designed for student builders.</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="card-hover bg-white border border-black/5 rounded-[22px] p-6 reveal"><div class="w-12 h-12 rounded-2xl bg-brand text-white flex items-center justify-center text-xl font-black">&lt;/&gt;</div><h3 class="font-display font-bold text-lg mt-5">Build</h3><p class="text-gray-600 text-sm leading-relaxed mt-2">Create prototypes, apps and hardware with guided tools and campus resources.</p><span class="text-brand text-sm font-semibold mt-4 inline-block">Explore →</span></div>
+      <div class="card-hover bg-white border border-black/5 rounded-[22px] p-6 reveal d1"><div class="w-12 h-12 rounded-2xl bg-lime flex items-center justify-center text-xl">⚑</div><h3 class="font-display font-bold text-lg mt-5">Join events</h3><p class="text-gray-600 text-sm leading-relaxed mt-2">Discover hackathons, workshops and challenges matched to your skills and campus.</p><span class="text-brand text-sm font-semibold mt-4 inline-block">Browse events →</span></div>
+      <div class="card-hover bg-white border border-black/5 rounded-[22px] p-6 reveal d2"><div class="w-12 h-12 rounded-2xl bg-black text-white flex items-center justify-center">👥</div><h3 class="font-display font-bold text-lg mt-5">Collaborate</h3><p class="text-gray-600 text-sm leading-relaxed mt-2">Find teammates, share progress and build together in real time.</p><span class="text-brand text-sm font-semibold mt-4 inline-block">Find a team →</span></div>
+      <div class="card-hover bg-white border border-black/5 rounded-[22px] p-6 reveal"><div class="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center">🏆</div><h3 class="font-display font-bold text-lg mt-5">Compete</h3><p class="text-gray-600 text-sm leading-relaxed mt-2">Pitch, demo and climb leaderboards against builders from 340+ campuses.</p><span class="text-brand text-sm font-semibold mt-4 inline-block">See leaderboard →</span></div>
+      <div class="card-hover bg-white border border-black/5 rounded-[22px] p-6 reveal d1"><div class="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center">✦</div><h3 class="font-display font-bold text-lg mt-5">Learn</h3><p class="text-gray-600 text-sm leading-relaxed mt-2">Workshops, mentors and guides that level you up every single event.</p><span class="text-brand text-sm font-semibold mt-4 inline-block">Start learning →</span></div>
+      <div class="card-hover bg-brand text-white rounded-[22px] p-6 reveal d2 relative overflow-hidden"><div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full"></div><div class="w-12 h-12 rounded-2xl bg-white text-brand flex items-center justify-center font-black">★</div><h3 class="font-display font-bold text-lg mt-5">Showcase</h3><p class="text-white/80 text-sm leading-relaxed mt-2">Present your work, earn certificates and build a portfolio recruiters love.</p><button onclick="showPage('register')" class="bg-white text-brand text-sm font-bold px-4 py-2 rounded-full mt-4">Showcase yours →</button></div>
+    </div>
+  </div>
+
+  <!-- WORKFLOW -->
+  <div id="workflow" class="bg-white border-y border-black/5">
+    <div class="max-w-7xl mx-auto px-5 lg:px-8 py-14">
+      <div class="text-center max-w-xl mx-auto"><p class="text-xs font-bold tracking-[0.2em] text-brand">HOW IT WORKS</p><h2 class="font-display font-extrabold text-[34px] lg:text-[42px] tracking-tight mt-2">From sign-up to stage<br>in four steps.</h2></div>
+      <div class="grid md:grid-cols-4 gap-5 mt-10">
+        <div class="relative bg-bg rounded-[22px] p-6 reveal"><span class="font-display font-black text-5xl text-black/10">01</span><h3 class="font-bold text-lg mt-3">Create your profile</h3><p class="text-sm text-gray-600 mt-2 leading-relaxed">Tell us your skills, campus and interests. Get matched instantly.</p></div>
+        <div class="relative bg-bg rounded-[22px] p-6 reveal d1"><span class="font-display font-black text-5xl text-black/10">02</span><h3 class="font-bold text-lg mt-3">Discover & join</h3><p class="text-sm text-gray-600 mt-2 leading-relaxed">Browse events, check idea fit and register in one click.</p></div>
+        <div class="relative bg-bg rounded-[22px] p-6 reveal d2"><span class="font-display font-black text-5xl text-black/10">03</span><h3 class="font-bold text-lg mt-3">Build with your team</h3><p class="text-sm text-gray-600 mt-2 leading-relaxed">Collaborate, get mentored and ship your demo on schedule.</p></div>
+        <div class="relative bg-lime rounded-[22px] p-6 reveal d3"><span class="font-display font-black text-5xl text-black/15">04</span><h3 class="font-bold text-lg mt-3">Showcase & earn</h3><p class="text-sm text-black/70 mt-2 leading-relaxed">Pitch live, win prizes and add certificates to your digital card.</p></div>
+      </div>
+      <div class="grid lg:grid-cols-2 gap-6 mt-8 items-stretch">
+        <div class="rounded-[24px] overflow-hidden relative reveal"><img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=900&h=600&fit=crop" class="w-full h-full object-cover min-h-[280px]"><div class="absolute bottom-4 left-4 bg-white rounded-2xl px-4 py-3 shadow-soft"><p class="font-bold text-sm">Final demo day — Innovate 2025</p><p class="text-xs text-gray-500">2,400 attendees · 180 teams</p></div></div>
+        <div id="events-preview" class="bg-bg rounded-[24px] p-6 reveal d1">
+          <div class="flex justify-between items-center"><h3 class="font-display font-bold text-xl">Upcoming events</h3><span class="pill bg-white border">This week</span></div>
+          <div class="space-y-3 mt-5">
+            <div class="bg-white rounded-2xl p-4 flex justify-between items-center border"><div><p class="font-bold text-sm">AI for Good Hackathon</p><p class="text-xs text-gray-500 mt-1">Mar 14 · Online · 48h</p></div><span class="pill bg-violet-100 text-brand">Register</span></div>
+            <div class="bg-white rounded-2xl p-4 flex justify-between items-center border"><div><p class="font-bold text-sm">Web3 Builders Cup</p><p class="text-xs text-gray-500 mt-1">Mar 21 · Campus Hub · 36h</p></div><span class="pill bg-lime text-black">Open</span></div>
+            <div class="bg-white rounded-2xl p-4 flex justify-between items-center border"><div><p class="font-bold text-sm">Design & Code Jam</p><p class="text-xs text-gray-500 mt-1">Mar 28 · Hybrid · 24h</p></div><span class="pill bg-orange-100 text-orange-700">Soon</span></div>
+          </div>
+          <button onclick="showPage('login')" class="w-full mt-5 bg-black text-white py-3.5 rounded-full font-semibold text-sm">View all events →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div id="cta" class="max-w-7xl mx-auto px-5 lg:px-8 py-14">
+    <div class="relative bg-brand rounded-[30px] overflow-hidden px-7 py-12 lg:p-14 text-white reveal">
+      <div class="absolute inset-0 soft-grid opacity-20"></div><div class="absolute -right-10 -top-10 w-64 h-64 bg-lime/30 rounded-full blur-3xl"></div>
+      <div class="relative grid lg:grid-cols-2 gap-8 items-center">
+        <div><h2 class="font-display font-black text-[36px] lg:text-[50px] leading-[1.02] tracking-tight">Your next team is<br>already building.</h2><p class="text-white/80 mt-4 max-w-md">Join free today. Discover events, validate your idea and showcase your work to the campus community.</p></div>
+        <div class="flex flex-col sm:flex-row gap-3 lg:justify-end">
+          <button onclick="showPage('login')" class="bg-white text-brand font-bold px-7 py-4 rounded-full">Login to Dashboard →</button>
+          <button onclick="showPage('register')" class="bg-black text-white font-bold px-7 py-4 rounded-full border border-white/20">Create account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="border-t border-black/5 bg-white">
+    <div class="max-w-7xl mx-auto px-5 lg:px-8 py-8 flex flex-col md:flex-row justify-between gap-6">
+      <a href="#" class="flex items-center gap-3"><div class="flex items-end gap-[4px]"><span style="width:6px;height:28px;background:#101010;border-radius:2px;transform:skewX(-14deg);display:block"></span><span style="width:6px;height:28px;background:#6D28D9;border-radius:2px;transform:skewX(-14deg);display:block"></span><span style="width:6px;height:28px;background:#84CC16;border-radius:2px;transform:skewX(-14deg);display:block"></span></div><div class="leading-none"><div class="font-display font-black text-[16px]">CAMPUSCODE</div><div class="text-[7.5px] tracking-[0.38em] text-gray-500 mt-[2px]">HACKATHON ARENA</div></div></a>
+      <p class="text-xs text-gray-500">© 2026 CampusCode · Built by students, for students. <span class="mx-2">·</span> Privacy <span class="mx-2">·</span> Terms <span class="mx-2">·</span> Contact</p>
+    </div>
+  </footer>
+</section>
+
+<!-- ============ LOGIN PAGE ============ -->
+<section id="page-login" class="page">
+  <header class="max-w-7xl mx-auto px-5 lg:px-8 h-[76px] flex items-center justify-between">
+    <a href="#" onclick="showPage('landing');return false" class="flex items-center gap-3"><div class="flex items-end gap-[4px]"><span style="width:7px;height:34px;background:#101010;border-radius:2px;transform:skewX(-14deg);display:block"></span><span style="width:7px;height:34px;background:#6D28D9;border-radius:2px;transform:skewX(-14deg);display:block"></span><span style="width:7px;height:34px;background:#84CC16;border-radius:2px;transform:skewX(-14deg);display:block"></span></div><div class="leading-none"><div class="font-display font-black text-[19px]">CAMPUSCODE</div><div class="text-[8.5px] tracking-[0.38em] text-gray-500 mt-[3px]">HACKATHON ARENA</div></div></a>
+    <button onclick="showPage('landing')" class="text-sm font-semibold bg-white border px-4 py-2 rounded-full">← Back to home</button>
+  </header>
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 pb-10">
+    <div class="grid lg:grid-cols-2 gap-6 items-stretch">
+      <!-- Brand side -->
+      <div class="relative rounded-[28px] overflow-hidden bg-brand text-white p-8 lg:p-12 flex flex-col justify-between min-h-[520px] reveal">
+        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&h=800&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-25">
+        <div class="absolute inset-0 bg-gradient-to-t from-brand via-brand/70 to-transparent"></div>
+        <div class="relative"><span class="pill bg-lime text-black">Welcome back</span><h2 class="font-display font-black text-[38px] lg:text-[50px] leading-[1.02] mt-5">Pick up where<br>your team left off.</h2><p class="text-white/80 mt-4 max-w-sm">Your events, certificates and ideas are waiting in your dashboard.</p></div>
+        <div class="relative bg-white/10 backdrop-blur rounded-2xl p-5 border border-white/20"><p class="text-sm leading-relaxed">“We formed our team, validated our idea and won our first hackathon — all inside CampusCode.”</p><div class="flex items-center gap-3 mt-4"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop" class="w-10 h-10 rounded-full object-cover"><div><p class="font-bold text-sm">Priya Sharma</p><p class="text-xs text-white/70">CS · Batch of 2027</p></div></div></div>
+      </div>
+      <!-- Form side -->
+      <div class="bg-white border border-black/5 rounded-[28px] p-7 lg:p-10 shadow-soft reveal d1">
+        <h1 class="font-display font-extrabold text-[30px] tracking-tight">Log in</h1><p class="text-gray-600 text-sm mt-2">Enter your details to continue to your dashboard.</p>
+        <form id="loginForm" class="mt-7 space-y-4" novalidate>
+          <div><label>Email address</label><input id="loginEmail" type="email" class="input mt-1.5" placeholder="you@campus.edu" value="alex@campuscode.edu"></div>
+          <div><label>Password</label><div class="relative mt-1.5"><input id="loginPass" type="password" class="input pr-12" placeholder="••••••••" value="password123"><button type="button" onclick="togglePass('loginPass',this)" class="absolute right-3 top-3 text-xs font-bold text-gray-500">SHOW</button></div></div>
+          <div><label>Verification</label>
+            <div class="flex gap-2 mt-1.5"><div class="flex items-center gap-2 bg-bg border rounded-[14px] px-3 py-2 shrink-0"><span id="loginCaptchaQ" class="font-display font-extrabold text-[15px] tracking-wider">7 + 4</span><button type="button" onclick="newCaptcha('login')" class="w-7 h-7 bg-white border rounded-full text-sm">↻</button></div><input id="loginCaptcha" class="input" placeholder="Answer"></div>
+            <p class="text-[11px] text-gray-400 mt-1.5">Demo captcha — solve to continue. Try refreshing if needed.</p>
+          </div>
+          <div class="flex justify-between items-center text-sm"><label class="flex items-center gap-2 font-normal text-gray-600"><input type="checkbox" checked class="accent-[#6D28D9] w-4 h-4"> Remember me</label><a href="#" onclick="toast('Password reset link sent to your email');return false" class="font-semibold text-brand">Forgot password?</a></div>
+          <p id="loginError" class="hidden text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-3 py-2.5"></p>
+          <button type="submit" class="btn-primary w-full bg-brand text-white font-bold py-4 rounded-full text-[15px]">Log in to Dashboard →</button>
+        </form>
+        <div class="flex items-center gap-3 my-5"><span class="flex-1 h-px bg-gray-200"></span><span class="text-xs text-gray-400">or</span><span class="flex-1 h-px bg-gray-200"></span></div>
+        <button onclick="toast('SSO is not enabled in this demo')" class="w-full border py-3.5 rounded-full font-semibold text-sm bg-white">Continue with Google</button>
+        <p class="text-center text-sm text-gray-600 mt-6">New here? <button onclick="showPage('register')" class="font-bold text-brand">Create account →</button></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REGISTER PAGE ============ -->
+<section id="page-register" class="page">
+  <header class="max-w-7xl mx-auto px-5 lg:px-8 h-[76px] flex items-center justify-between">
+    <a href="#" onclick="showPage('landing');return false" class="flex items-center gap-3"><div class="flex items-end gap-[4px]"><span style="width:7px;height:34px;background:#101010;border-radius:2px;transform:skewX(-14deg);display:block"></span><span style="width:7px;height:34px;background:#6D28D9;border-radius:2px;transform:skewX(-14deg);display:block"></span><span style="width:7px;height:34px;background:#84CC16;border-radius:2px;transform:skewX(-14deg);display:block"></span></div><div class="leading-none"><div class="font-display font-black text-[19px]">CAMPUSCODE</div><div class="text-[8.5px] tracking-[0.38em] text-gray-500 mt-[3px]">HACKATHON ARENA</div></div></a>
+    <button onclick="showPage('landing')" class="text-sm font-semibold bg-white border px-4 py-2 rounded-full">← Back to home</button>
+  </header>
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 pb-10">
+    <div class="grid lg:grid-cols-2 gap-6 items-stretch">
+      <div class="bg-white border border-black/5 rounded-[28px] p-7 lg:p-10 shadow-soft reveal order-2 lg:order-1">
+        <h1 class="font-display font-extrabold text-[30px] tracking-tight">Create your account</h1><p class="text-gray-600 text-sm mt-2">Join 12,400+ students building on CampusCode.</p>
+        <form id="regForm" class="mt-7 space-y-4" novalidate>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div><label>Full name</label><input id="regName" class="input mt-1.5" placeholder="Alex Carter"></div>
+            <div><label>Account type</label><select id="regType" class="input mt-1.5"><option>Student</option><option>Club / Society</option><option>Alumni</option><option>Mentor</option></select></div>
+          </div>
+          <div><label>Email address</label><input id="regEmail" type="email" class="input mt-1.5" placeholder="you@campus.edu"></div>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div><label>Password</label><input id="regPass" type="password" class="input mt-1.5" placeholder="Min. 8 characters"><div class="progress mt-2"><div id="passBar" style="width:10%;background:#EF4444"></div></div><p id="passHint" class="text-[11px] text-gray-400 mt-1">Use 8+ chars with a mix.</p></div>
+            <div><label>Confirm password</label><input id="regPass2" type="password" class="input mt-1.5" placeholder="Repeat password"></div>
+          </div>
+          <div><label>Verification</label><div class="flex gap-2 mt-1.5"><div class="flex items-center gap-2 bg-bg border rounded-[14px] px-3 py-2 shrink-0"><span id="regCaptchaQ" class="font-display font-extrabold">5 + 3</span><button type="button" onclick="newCaptcha('reg')" class="w-7 h-7 bg-white border rounded-full text-sm">↻</button></div><input id="regCaptcha" class="input" placeholder="Answer"></div></div>
+          <label class="flex items-start gap-2 text-[13px] text-gray-600"><input type="checkbox" checked class="accent-[#6D28D9] mt-0.5"> I agree to the Terms and Code of Conduct for student events.</label>
+          <p id="regError" class="hidden text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-3 py-2.5"></p>
+          <button type="submit" class="btn-primary w-full bg-black text-white font-bold py-4 rounded-full text-[15px]">Create account →</button>
+        </form>
+        <p class="text-center text-sm text-gray-600 mt-6">Already have an account? <button onclick="showPage('login')" class="font-bold text-brand">Log in →</button></p>
+      </div>
+      <div class="relative rounded-[28px] overflow-hidden bg-black text-white p-8 lg:p-12 flex flex-col justify-between min-h-[520px] reveal d1 order-1 lg:order-2">
+        <img src="https://images.unsplash.com/photo-1531482615303-582542642c6e?w=1000&h=800&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-35">
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+        <div class="relative"><span class="pill bg-lime text-black">Start free</span><h2 class="font-display font-black text-[38px] lg:text-[50px] leading-[1.02] mt-5">Build your first<br>project this week.</h2><p class="text-white/80 mt-4 max-w-sm">Create an account to unlock events, team matching, IdeaCheck AI and certificates.</p>
+        <div class="grid grid-cols-2 gap-3 mt-8 max-w-sm"><div class="bg-white/10 backdrop-blur border border-white/15 rounded-2xl p-4"><p class="font-display font-extrabold text-xl">120+</p><p class="text-xs text-white/70">Events / year</p></div><div class="bg-white/10 backdrop-blur border border-white/15 rounded-2xl p-4"><p class="font-display font-extrabold text-xl">Free</p><p class="text-xs text-white/70">For all students</p></div></div></div>
+        <div class="relative flex items-center gap-3"><div class="flex -space-x-2"><span class="w-8 h-8 rounded-full bg-lime border-2 border-black"></span><span class="w-8 h-8 rounded-full bg-brand border-2 border-black"></span><span class="w-8 h-8 rounded-full bg-white border-2 border-black"></span></div><p class="text-xs text-white/80">Joined by students from 340+ campuses</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DASHBOARD ============ -->
+<section id="page-dashboard" class="page">
+<div class="flex min-h-screen">
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="fixed lg:sticky top-0 z-40 h-screen w-[262px] bg-white border-r border-black/5 flex flex-col shrink-0 -translate-x-full lg:translate-x-0 transition-transform duration-300">
+    <div class="px-5 pt-5 pb-4 flex items-center justify-between">
+      <a href="#" onclick="showPage('landing');return false" class="flex items-center gap-2.5"><div class="flex items-end gap-[3px]"><span style="width:6px;height:28px;background:#101010;border-radius:2px;transform:skewX(-14deg);display:block"></span><span style="width:6px;height:28px;background:#6D28D9;border-radius:2px;transform:skewX(-14deg);display:block"></span><span style="width:6px;height:28px;background:#84CC16;border-radius:2px;transform:skewX(-14deg);display:block"></span></div><div class="leading-none"><div class="font-display font-black text-[15px]">CAMPUSCODE</div><div class="text-[7px] tracking-[0.36em] text-gray-500 mt-[2px]">HACKATHON ARENA</div></div></a>
+      <button class="lg:hidden text-xl" onclick="toggleSidebar(false)">×</button>
+    </div>
+    <div class="px-4"><div class="bg-bg rounded-2xl p-3 flex items-center gap-3"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop" class="w-10 h-10 rounded-full object-cover"><div class="min-w-0"><p id="sideName" class="font-bold text-[13px] truncate">Alex Carter</p><p class="text-[11px] text-gray-500 truncate">alex@campuscode.edu</p></div><span class="ml-auto pill bg-lime text-black !text-[9px]">PRO</span></div></div>
+    <nav id="sideNav" class="flex-1 overflow-y-auto px-4 py-4 space-y-1 scrollbar-hide"></nav>
+    <div class="p-4 border-t"><div class="bg-brand rounded-2xl p-4 text-white"><p class="font-bold text-sm">Need help?</p><p class="text-xs text-white/75 mt-1">Talk to RuleBot AI anytime.</p><button onclick="showDash('rulebot')" class="bg-white text-brand text-xs font-bold px-3 py-2 rounded-full mt-3">Ask RuleBot →</button></div></div>
+  </aside>
+  <div id="sideOverlay" class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden" onclick="toggleSidebar(false)"></div>
+
+  <!-- MAIN -->
+  <main class="flex-1 min-w-0">
+    <header class="sticky top-0 z-20 bg-[#F7F7F3]/90 backdrop-blur border-b border-black/5 px-5 lg:px-8 h-[68px] flex items-center gap-3">
+      <button class="lg:hidden w-10 h-10 bg-white border rounded-full" onclick="toggleSidebar(true)">☰</button>
+      <div class="relative flex-1 max-w-md hidden sm:block"><span class="absolute left-3.5 top-3 text-gray-400">⌕</span><input id="globalSearch" class="input !pl-10 !py-2.5 !rounded-full" placeholder="Search events, certificates, guides..."></div>
+      <div class="ml-auto flex items-center gap-2.5">
+        <button onclick="showDash('notifications')" class="relative w-10 h-10 bg-white border rounded-full flex items-center justify-center">🔔<span class="absolute top-1.5 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span></button>
+        <button onclick="showDash('profile')" class="flex items-center gap-2.5 bg-white border pl-1 pr-3 py-1 rounded-full"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop" class="w-8 h-8 rounded-full object-cover"><span class="text-sm font-semibold hidden sm:block" id="headName">Alex Carter</span><span class="text-gray-400 text-xs">▾</span></button>
+      </div>
+    </header>
+
+    <div class="px-5 lg:px-8 py-6 max-w-[1180px] mx-auto">
+
+    <!-- OVERVIEW -->
+    <div id="dash-overview" class="dash-section active">
+      <div class="bg-black text-white rounded-[26px] p-6 lg:p-8 relative overflow-hidden reveal">
+        <div class="absolute -right-10 -top-10 w-56 h-56 bg-lime/25 rounded-full blur-3xl"></div>
+        <div class="relative flex flex-col lg:flex-row justify-between gap-6">
+          <div><p class="text-white/60 text-sm">Tuesday, Mar 10 · Semester 2</p><h1 class="font-display font-black text-[30px] lg:text-[40px] leading-tight mt-2">Welcome back, <span id="welcomeName">Alex</span> 👋</h1><p class="text-white/70 text-sm mt-2 max-w-md">You have 2 events this week and 1 certificate ready to download. Keep building!</p>
+          <div class="flex gap-2.5 mt-5"><button onclick="showDash('events')" class="bg-lime text-black font-bold px-5 py-3 rounded-full text-sm">Browse events →</button><button onclick="showDash('ideacheck')" class="bg-white/10 border border-white/20 font-semibold px-5 py-3 rounded-full text-sm">Check an idea</button></div></div>
+          <div class="bg-white/10 border border-white/15 rounded-2xl p-4 w-full lg:w-[260px] backdrop-blur"><div class="flex justify-between text-xs text-white/70"><span>Profile strength</span><b class="text-white">86%</b></div><div class="progress bg-white/20 mt-3"><div style="width:86%;background:#B8E62E"></div></div><p class="text-xs text-white/70 mt-3">Add a portfolio link to reach 100%.</p><button onclick="showDash('profile')" class="text-lime text-xs font-bold mt-2">Complete profile →</button></div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-5">
+        <div class="card-hover bg-white border rounded-[20px] p-5 reveal"><p class="text-xs text-gray-500 font-semibold">EVENTS JOINED</p><p class="font-display font-black text-[30px] mt-2" id="statJoined">8</p><p class="text-xs text-green-600 font-semibold mt-1">↑ 2 this month</p></div>
+        <div class="card-hover bg-white border rounded-[20px] p-5 reveal d1"><p class="text-xs text-gray-500 font-semibold">CERTIFICATES</p><p class="font-display font-black text-[30px] mt-2">5</p><p class="text-xs text-gray-500 mt-1">1 ready to download</p></div>
+        <div class="card-hover bg-white border rounded-[20px] p-5 reveal d2"><p class="text-xs text-gray-500 font-semibold">IDEAS CHECKED</p><p class="font-display font-black text-[30px] mt-2">12</p><p class="text-xs text-gray-500 mt-1">Avg. score 84/100</p></div>
+        <div class="card-hover bg-brand text-white rounded-[20px] p-5 reveal d3"><p class="text-xs text-white/70 font-semibold">ARENA POINTS</p><p class="font-display font-black text-[30px] mt-2">2,480</p><p class="text-xs text-white/80 mt-1">Level 7 · Builder</p></div>
+      </div>
+
+      <div class="flex items-center justify-between mt-8 mb-4"><h2 class="font-display font-extrabold text-[22px]">Recommended for you</h2><button onclick="showDash('events')" class="text-sm font-bold text-brand">View all →</button></div>
+      <div id="overviewEvents" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+      <div class="grid lg:grid-cols-5 gap-4 mt-6">
+        <div class="lg:col-span-3 bg-white border rounded-[22px] p-6 reveal">
+          <h3 class="font-display font-bold text-lg">Recent activity</h3>
+          <div class="mt-4 space-y-4">
+            <div class="flex gap-3"><span class="w-9 h-9 rounded-full bg-violet-100 flex items-center justify-center shrink-0">✓</span><div><p class="text-sm"><b>Registered</b> for AI for Good Hackathon</p><p class="text-xs text-gray-400 mt-0.5">2 hours ago</p></div></div>
+            <div class="flex gap-3"><span class="w-9 h-9 rounded-full bg-lime/40 flex items-center justify-center shrink-0">★</span><div><p class="text-sm"><b>Earned certificate</b> — Web Dev Workshop</p><p class="text-xs text-gray-400 mt-0.5">Yesterday</p></div></div>
+            <div class="flex gap-3"><span class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center shrink-0">◆</span><div><p class="text-sm"><b>Idea checked</b> — Campus Food Finder · 92/100</p><p class="text-xs text-gray-400 mt-0.5">Mar 8</p></div></div>
+          </div>
+        </div>
+        <div class="lg:col-span-2 bg-white border rounded-[22px] p-6 reveal d1">
+          <div class="flex justify-between items-center"><h3 class="font-display font-bold text-lg">Notifications</h3><span class="pill bg-red-100 text-red-600">3 new</span></div>
+          <div class="mt-4 space-y-3 text-sm">
+            <div class="bg-bg rounded-xl p-3.5"><p class="font-semibold">Team invite from Priya</p><p class="text-xs text-gray-500 mt-1">Pixel Squad invited you to join</p></div>
+            <div class="bg-bg rounded-xl p-3.5"><p class="font-semibold">Event starts in 2 days</p><p class="text-xs text-gray-500 mt-1">AI for Good Hackathon begins Mar 14</p></div>
+            <button onclick="showDash('notifications')" class="w-full text-center text-brand font-bold text-sm py-2">See all notifications →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white border border-dashed rounded-[22px] p-8 text-center mt-4 reveal">
+        <div class="w-14 h-14 mx-auto bg-bg rounded-2xl flex items-center justify-center text-2xl">◇</div>
+        <h3 class="font-display font-bold mt-4">No upcoming submissions</h3><p class="text-sm text-gray-500 mt-1">When you join an event, your project workspace will appear here.</p>
+        <button onclick="showDash('myevents')" class="mt-4 text-sm font-bold text-brand">View my events →</button>
+      </div>
+    </div>
+
+    <!-- EVENTS -->
+    <div id="dash-events" class="dash-section">
+      <div class="flex flex-col lg:flex-row justify-between gap-4"><div><h1 class="font-display font-black text-[32px] tracking-tight">Events</h1><p class="text-gray-600 text-sm mt-1">Discover hackathons and challenges matched to you.</p></div>
+      <div class="flex gap-2 flex-wrap" id="eventFilters"><button data-f="All" class="filter-btn bg-black text-white px-4 py-2 rounded-full text-sm font-semibold">All</button><button data-f="Upcoming" class="filter-btn bg-white border px-4 py-2 rounded-full text-sm font-semibold">Upcoming</button><button data-f="Live" class="filter-btn bg-white border px-4 py-2 rounded-full text-sm font-semibold">Live</button><button data-f="Completed" class="filter-btn bg-white border px-4 py-2 rounded-full text-sm font-semibold">Completed</button></div></div>
+      <input id="eventSearch" class="input mt-5 max-w-md" placeholder="Search events...">
+      <div id="allEvents" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-5"></div>
+    </div>
+
+    <!-- MY EVENTS -->
+    <div id="dash-myevents" class="dash-section">
+      <h1 class="font-display font-black text-[32px] tracking-tight">My Events</h1><p class="text-gray-600 text-sm mt-1">Events you have registered for.</p>
+      <div id="myEventsList" class="mt-6 space-y-4"></div>
+      <div id="myEventsEmpty" class="hidden bg-white border border-dashed rounded-[22px] p-10 text-center mt-6"><p class="text-4xl">⚑</p><h3 class="font-display font-bold text-lg mt-3">You haven't joined any events yet</h3><p class="text-sm text-gray-500 mt-1">Browse events and register to see them here.</p><button onclick="showDash('events')" class="mt-4 bg-brand text-white px-5 py-3 rounded-full text-sm font-bold">Browse events</button></div>
+    </div>
+
+    <!-- HACKMATE -->
+    <div id="dash-hackmate" class="dash-section">
+      <h1 class="font-display font-black text-[32px] tracking-tight">HackMate AI</h1><p class="text-gray-600 text-sm mt-1">Your build partner for ideas, teams and deadlines.</p>
+      <div class="bg-white border rounded-[24px] mt-6 overflow-hidden">
+        <div id="chatBox" class="p-5 space-y-4 h-[340px] overflow-y-auto bg-bg/60">
+          <div class="flex gap-3"><span class="w-9 h-9 rounded-full bg-brand text-white flex items-center justify-center font-black text-sm shrink-0">H</span><div class="bg-white border rounded-2xl rounded-tl-sm p-3.5 text-sm max-w-[80%]">Hi Alex! Tell me what you're building and I'll help you plan, split tasks and prepare your demo. What are you working on?</div></div>
+        </div>
+        <div class="p-4 border-t flex gap-2"><input id="chatInput" class="input !rounded-full" placeholder="Ask HackMate anything..."><button onclick="sendChat()" class="btn-primary bg-black text-white px-6 rounded-full font-bold text-sm shrink-0">Send</button></div>
+      </div>
+      <div class="grid sm:grid-cols-3 gap-3 mt-4"><button onclick="quickChat('Help me plan my hackathon project')" class="bg-white border rounded-full py-2.5 text-sm font-semibold">Plan my project</button><button onclick="quickChat('How do I find teammates?')" class="bg-white border rounded-full py-2.5 text-sm font-semibold">Find teammates</button><button onclick="quickChat('Tips for demo day')" class="bg-white border rounded-full py-2.5 text-sm font-semibold">Demo day tips</button></div>
+    </div>
+
+    <!-- IDEACHECK -->
+    <div id="dash-ideacheck" class="dash-section">
+      <h1 class="font-display font-black text-[32px] tracking-tight">IdeaCheck AI</h1><p class="text-gray-600 text-sm mt-1">Validate your idea before you build.</p>
+      <div class="grid lg:grid-cols-5 gap-5 mt-6">
+        <div class="lg:col-span-3 bg-white border rounded-[24px] p-6"><label>Your idea</label><textarea id="ideaText" rows="5" class="input mt-2" placeholder="Describe your idea in 2-3 sentences. Who is it for? What problem does it solve?"></textarea><button onclick="checkIdea()" class="btn-primary w-full bg-brand text-white font-bold py-3.5 rounded-full mt-4">Check my idea →</button></div>
+        <div class="lg:col-span-2 bg-black text-white rounded-[24px] p-6"><p class="text-white/60 text-xs font-bold tracking-widest">IDEA SCORE</p><p id="ideaScore" class="font-display font-black text-6xl mt-3">—</p><p id="ideaVerdict" class="text-white/70 text-sm mt-2">Add your idea to get a score, strengths and next steps.</p><div class="space-y-3 mt-5 text-sm"><div><div class="flex justify-between"><span>Impact</span><span id="impV">—</span></div><div class="progress bg-white/15 mt-1.5"><div id="impB" style="width:0%;background:#B8E62E"></div></div></div><div><div class="flex justify-between"><span>Feasibility</span><span id="feaV">—</span></div><div class="progress bg-white/15 mt-1.5"><div id="feaB" style="width:0%;background:#fff"></div></div></div></div></div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATES -->
+    <div id="dash-certificates" class="dash-section">
+      <div class="flex justify-between items-center"><div><h1 class="font-display font-black text-[32px] tracking-tight">Certificates</h1><p class="text-gray-600 text-sm mt-1">Verified achievements from events and workshops.</p></div><button onclick="toast('Certificate verification link copied')" class="bg-white border px-4 py-2.5 rounded-full text-sm font-semibold">Verify</button></div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+        <div class="card-hover bg-white border rounded-[22px] p-6"><div class="flex justify-between"><span class="pill bg-lime text-black">Verified</span><span class="text-xs text-gray-400">Mar 2026</span></div><h3 class="font-display font-bold text-lg mt-5">Web Dev Workshop</h3><p class="text-sm text-gray-500 mt-1">CampusCode · Top 10%</p><button onclick="toast('Certificate downloaded (demo)')" class="w-full mt-5 bg-black text-white py-3 rounded-full text-sm font-bold">Download PDF</button></div>
+        <div class="card-hover bg-white border rounded-[22px] p-6"><div class="flex justify-between"><span class="pill bg-violet-100 text-brand">Verified</span><span class="text-xs text-gray-400">Feb 2026</span></div><h3 class="font-display font-bold text-lg mt-5">AI for Good — Finalist</h3><p class="text-sm text-gray-500 mt-1">Innovate 2026 · 3rd Place</p><button onclick="toast('Certificate downloaded (demo)')" class="w-full mt-5 bg-black text-white py-3 rounded-full text-sm font-bold">Download PDF</button></div>
+        <div class="card-hover bg-white border rounded-[22px] p-6"><div class="flex justify-between"><span class="pill bg-blue-100 text-blue-700">Verified</span><span class="text-xs text-gray-400">Jan 2026</span></div><h3 class="font-display font-bold text-lg mt-5">Design Systems Sprint</h3><p class="text-sm text-gray-500 mt-1">CampusCode · Completed</p><button onclick="toast('Certificate downloaded (demo)')" class="w-full mt-5 bg-black text-white py-3 rounded-full text-sm font-bold">Download PDF</button></div>
+      </div>
+      <div class="bg-white border border-dashed rounded-[22px] p-8 text-center mt-4"><p class="font-bold">Earn your next certificate</p><p class="text-sm text-gray-500 mt-1">Complete an upcoming event to unlock a new verified certificate.</p></div>
+    </div>
+
+    <!-- DIGITAL CARD -->
+    <div id="dash-card" class="dash-section">
+      <h1 class="font-display font-black text-[32px] tracking-tight">Digital Card</h1><p class="text-gray-600 text-sm mt-1">Your CampusCode builder identity.</p>
+      <div class="mt-6 max-w-[560px] bg-gradient-to-br from-brand to-[#3B0A7A] text-white rounded-[26px] p-7 relative overflow-hidden">
+        <div class="absolute -right-8 -bottom-8 w-44 h-44 bg-lime/25 rounded-full blur-2xl"></div>
+        <div class="relative flex justify-between"><div class="flex items-center gap-2"><span style="width:5px;height:22px;background:#fff;border-radius:2px;transform:skewX(-14deg);display:block"></span><span style="width:5px;height:22px;background:#B8E62E;border-radius:2px;transform:skewX(-14deg);display:block"></span><span style="width:5px;height:22px;background:#fff;border-radius:2px;transform:skewX(-14deg);display:block"></span><b class="font-display text-sm ml-1">CAMPUSCODE</b></div><span class="pill bg-lime text-black">STUDENT</span></div>
+        <div class="relative flex gap-5 mt-10 items-end"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=160&h=160&fit=crop" class="w-20 h-20 rounded-2xl object-cover border-2 border-white/40"><div><p id="cardName" class="font-display font-extrabold text-2xl">Alex Carter</p><p class="text-white/70 text-sm">Computer Science · Level 7 Builder</p><p class="text-white/70 text-sm mt-1">ID: CC-2026-0842 · 2,480 pts</p></div></div>
+        <div class="relative flex justify-between items-end mt-8"><span class="text-xs text-white/60">Valid for 2026 season</span><div class="grid grid-cols-5 gap-1 w-24"><span class="h-8 bg-white"></span><span class="h-8 bg-white/70"></span><span class="h-8 bg-lime"></span><span class="h-8 bg-white"></span><span class="h-8 bg-white/70"></span></div></div>
+      </div>
+      <button onclick="toast('Digital card shared (demo)')" class="mt-4 bg-black text-white px-6 py-3 rounded-full text-sm font-bold">Share card</button>
+    </div>
+
+    <!-- RULEBOT -->
+    <div id="dash-rulebot" class="dash-section">
+      <h1 class="font-display font-black text-[32px] tracking-tight">RuleBot AI</h1><p class="text-gray-600 text-sm mt-1">Quick answers on rules, eligibility and fair play.</p>
+      <div class="grid sm:grid-cols-2 gap-4 mt-6">
+        <button onclick="toast('RuleBot: Teams of 2–4 members. All code must be written during the event.')" class="text-left bg-white border rounded-[20px] p-5 card-hover"><b>Team rules</b><p class="text-sm text-gray-500 mt-1">Size, eligibility and code ownership</p></button>
+        <button onclick="toast('RuleBot: Plagiarism leads to disqualification. Cite open-source libraries.')" class="text-left bg-white border rounded-[20px] p-5 card-hover"><b>Fair play policy</b><p class="text-sm text-gray-500 mt-1">Plagiarism, AI use and judging</p></button>
+        <button onclick="toast('RuleBot: You must attend the demo to be eligible for prizes.')" class="text-left bg-white border rounded-[20px] p-5 card-hover"><b>Demo requirements</b><p class="text-sm text-gray-500 mt-1">What judges look for on stage</p></button>
+        <button onclick="toast('RuleBot: Late submissions are accepted within a 15-minute grace window.')" class="text-left bg-white border rounded-[20px] p-5 card-hover"><b>Deadlines & grace</b><p class="text-sm text-gray-500 mt-1">Submission windows and extensions</p></button>
+      </div>
+    </div>
+
+    <!-- GUIDE -->
+    <div id="dash-guide" class="dash-section">
+      <h1 class="font-display font-black text-[32px] tracking-tight">Student Guide</h1><p class="text-gray-600 text-sm mt-1">Your step-by-step path on CampusCode.</p>
+      <div class="space-y-3 mt-6 max-w-2xl">
+        <div class="bg-white border rounded-2xl p-5 flex gap-4"><span class="w-9 h-9 rounded-full bg-lime flex items-center justify-center font-black shrink-0">1</span><div><b>Complete your profile</b><p class="text-sm text-gray-500 mt-1">Add skills and campus so we can match you to events.</p></div></div>
+        <div class="bg-white border rounded-2xl p-5 flex gap-4"><span class="w-9 h-9 rounded-full bg-violet-100 flex items-center justify-center font-black shrink-0">2</span><div><b>Join your first event</b><p class="text-sm text-gray-500 mt-1">Start with a workshop or 24-hour jam to learn the flow.</p></div></div>
+        <div class="bg-white border rounded-2xl p-5 flex gap-4"><span class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center font-black shrink-0">3</span><div><b>Form a team & check your idea</b><p class="text-sm text-gray-500 mt-1">Use HackMate AI and IdeaCheck AI before building.</p></div></div>
+        <div class="bg-white border rounded-2xl p-5 flex gap-4"><span class="w-9 h-9 rounded-full bg-orange-100 flex items-center justify-center font-black shrink-0">4</span><div><b>Demo & earn</b><p class="text-sm text-gray-500 mt-1">Showcase your work and download your certificate.</p></div></div>
+      </div>
+    </div>
+
+    <!-- COMMUNICATIONS -->
+    <div id="dash-comms" class="dash-section">
+      <h1 class="font-display font-black text-[32px] tracking-tight">Official Communications</h1><p class="text-gray-600 text-sm mt-1">Announcements from the CampusCode team.</p>
+      <div class="space-y-3 mt-6">
+        <div class="bg-white border rounded-2xl p-5"><div class="flex justify-between"><b>Innovate 2026 — Registrations open</b><span class="text-xs text-gray-400">Mar 10</span></div><p class="text-sm text-gray-500 mt-2">Registrations for the flagship campus hackathon are now open. Teams of 2–4. Prize pool announced soon.</p></div>
+        <div class="bg-white border rounded-2xl p-5"><div class="flex justify-between"><b>New: IdeaCheck AI is live</b><span class="text-xs text-gray-400">Mar 7</span></div><p class="text-sm text-gray-500 mt-2">Validate your hackathon idea in seconds with impact and feasibility scoring.</p></div>
+        <div class="bg-white border rounded-2xl p-5"><div class="flex justify-between"><b>Code of Conduct update</b><span class="text-xs text-gray-400">Mar 3</span></div><p class="text-sm text-gray-500 mt-2">Please review the updated fair-play and AI-use policy before your next event.</p></div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div id="dash-notifications" class="dash-section">
+      <h1 class="font-display font-black text-[32px] tracking-tight">Notifications</h1>
+      <div class="space-y-3 mt-6 max-w-2xl">
+        <div class="bg-white border rounded-2xl p-5 flex gap-3"><span class="w-2.5 h-2.5 bg-red-500 rounded-full mt-2 shrink-0"></span><div><b class="text-sm">Team invitation</b><p class="text-sm text-gray-500 mt-1">Priya invited you to Pixel Squad for AI for Good.</p><p class="text-xs text-gray-400 mt-1">10 minutes ago</p></div></div>
+        <div class="bg-white border rounded-2xl p-5 flex gap-3"><span class="w-2.5 h-2.5 bg-red-500 rounded-full mt-2 shrink-0"></span><div><b class="text-sm">Deadline reminder</b><p class="text-sm text-gray-500 mt-1">AI for Good Hackathon starts in 2 days. Check your team workspace.</p><p class="text-xs text-gray-400 mt-1">1 hour ago</p></div></div>
+        <div class="bg-white border rounded-2xl p-5 flex gap-3"><span class="w-2.5 h-2.5 bg-gray-300 rounded-full mt-2 shrink-0"></span><div><b class="text-sm">Certificate ready</b><p class="text-sm text-gray-500 mt-1">Your Web Dev Workshop certificate is available to download.</p><p class="text-xs text-gray-400 mt-1">Yesterday</p></div></div>
+      </div>
+    </div>
+
+    <!-- HELP -->
+    <div id="dash-help" class="dash-section">
+      <h1 class="font-display font-black text-[32px] tracking-tight">Help & Support</h1><p class="text-gray-600 text-sm mt-1">Frequently asked questions.</p>
+      <div class="space-y-3 mt-6 max-w-2xl">
+        <details class="bg-white border rounded-2xl p-5 cursor-pointer"><summary class="font-bold text-sm flex justify-between">How do I register for an event? <span>＋</span></summary><p class="text-sm text-gray-500 mt-3">Go to Events, choose an event and tap Register. It will appear in My Events instantly.</p></details>
+        <details class="bg-white border rounded-2xl p-5 cursor-pointer"><summary class="font-bold text-sm flex justify-between">How do certificates work? <span>＋</span></summary><p class="text-sm text-gray-500 mt-3">Certificates are issued after you attend and submit at an event. Download them from Certificates.</p></details>
+        <details class="bg-white border rounded-2xl p-5 cursor-pointer"><summary class="font-bold text-sm flex justify-between">Can I join alone? <span>＋</span></summary><p class="text-sm text-gray-500 mt-3">Yes. Solo builders can join or find a team through HackMate AI and event team pages.</p></details>
+        <div class="bg-brand text-white rounded-2xl p-6"><b>Still stuck?</b><p class="text-sm text-white/80 mt-1">Our student support team replies within one working day.</p><button onclick="toast('Support ticket created (demo)')" class="bg-white text-brand font-bold px-5 py-2.5 rounded-full text-sm mt-4">Contact support</button></div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="dash-profile" class="dash-section">
+      <h1 class="font-display font-black text-[32px] tracking-tight">Profile</h1><p class="text-gray-600 text-sm mt-1">Manage your student profile.</p>
+      <div class="grid lg:grid-cols-5 gap-5 mt-6">
+        <div class="lg:col-span-2 bg-white border rounded-[24px] p-6 text-center"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop" class="w-24 h-24 rounded-full object-cover mx-auto"><h3 id="profNameView" class="font-display font-bold text-xl mt-4">Alex Carter</h3><p class="text-sm text-gray-500">Computer Science · 2027</p><span class="pill bg-lime text-black inline-block mt-3">Level 7 Builder</span><div class="grid grid-cols-2 gap-3 mt-6 text-left"><div class="bg-bg rounded-xl p-3"><p class="text-xs text-gray-500">Events</p><p class="font-bold">8</p></div><div class="bg-bg rounded-xl p-3"><p class="text-xs text-gray-500">Points</p><p class="font-bold">2,480</p></div></div></div>
+        <form id="profileForm" class="lg:col-span-3 bg-white border rounded-[24px] p-6 space-y-4">
+          <div class="grid sm:grid-cols-2 gap-4"><div><label>Full name</label><input id="profName" class="input mt-1.5" value="Alex Carter"></div><div><label>Email</label><input id="profEmail" class="input mt-1.5" value="alex@campuscode.edu"></div></div>
+          <div class="grid sm:grid-cols-2 gap-4"><div><label>Campus</label><input class="input mt-1.5" value="North Campus"></div><div><label>Course</label><input class="input mt-1.5" value="B.Tech Computer Science"></div></div>
+          <div><label>Skills</label><input class="input mt-1.5" value="React, Python, UI Design, Figma"></div>
+          <div><label>Portfolio / GitHub</label><input class="input mt-1.5" placeholder="github.com/yourname"></div>
+          <button type="submit" class="btn-primary bg-brand text-white font-bold px-7 py-3.5 rounded-full">Save changes</button>
+        </form>
+      </div>
+    </div>
+
+    </div>
+  </main>
+</div>
+</section>
+
+<script>
+// ---------- ROUTING ----------
+let currentUser = {name:'Alex Carter', email:'alex@campuscode.edu'};
+function showPage(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(page==='dashboard'){ renderEvents(); renderMyEvents(); }
+}
+function toast(msg){
+  const t=document.createElement('div');
+  t.className='toast bg-black text-white text-sm font-medium px-5 py-3.5 rounded-2xl shadow-lift flex items-center gap-3 max-w-sm';
+  t.innerHTML='<span class="w-7 h-7 bg-lime text-black rounded-full flex items-center justify-center font-black shrink-0">✓</span><span>'+msg+'</span>';
+  document.getElementById('toastWrap').appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='all .4s';setTimeout(()=>t.remove(),400)},3200);
+}
+
+// ---------- CAPTCHA ----------
+const captchas={login:{a:7,b:4},reg:{a:5,b:3}};
+function newCaptcha(type){
+  const a=Math.floor(Math.random()*8)+2, b=Math.floor(Math.random()*8)+2;
+  captchas[type]={a,b};
+  document.getElementById(type+'CaptchaQ').textContent=a+' + '+b;
+}
+function checkCaptcha(type){
+  const v=parseInt(document.getElementById(type+'Captcha').value);
+  return v===captchas[type].a+captchas[type].b;
+}
+newCaptcha('login'); newCaptcha('reg');
+
+function togglePass(id,btn){ const el=document.getElementById(id); el.type=el.type==='password'?'text':'password'; btn.textContent=el.type==='password'?'SHOW':'HIDE'; }
+function showErr(id,msg){ const e=document.getElementById(id); e.textContent=msg; e.classList.remove('hidden'); }
+function hideErr(id){ document.getElementById(id).classList.add('hidden'); }
+
+// ---------- AUTH ----------
+document.getElementById('loginForm').addEventListener('submit',e=>{
+  e.preventDefault(); hideErr('loginError');
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  if(!email.includes('@')) return showErr('loginError','Please enter a valid email address.');
+  if(pass.length<6) return showErr('loginError','Password must be at least 6 characters.');
+  if(!checkCaptcha('login')) {document.getElementById('loginCaptcha').classList.add('err'); return showErr('loginError','Verification answer is incorrect. Try again.');}
+  document.getElementById('loginCaptcha').classList.remove('err');
+  const name=email.split('@')[0].replace(/[._-]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  setUser(name||'Alex Carter',email);
+  toast('Welcome back, '+name.split(' ')[0]+'!');
+  showPage('dashboard');
+});
+document.getElementById('regForm').addEventListener('submit',e=>{
+  e.preventDefault(); hideErr('regError');
+  const name=document.getElementById('regName').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const p1=document.getElementById('regPass').value, p2=document.getElementById('regPass2').value;
+  if(name.length<2) return showErr('regError','Please enter your full name.');
+  if(!email.includes('@')) return showErr('regError','Please enter a valid email address.');
+  if(p1.length<8) return showErr('regError','Password must be at least 8 characters.');
+  if(p1!==p2) return showErr('regError','Passwords do not match.');
+  if(!checkCaptcha('reg')) return showErr('regError','Verification answer is incorrect. Try again.');
+  setUser(name,email);
+  toast('Account created — welcome to CampusCode!');
+  showPage('dashboard');
+});
+document.getElementById('regPass').addEventListener('input',e=>{
+  const v=e.target.value; let s=0;
+  if(v.length>=8)s++; if(/[A-Z]/.test(v))s++; if(/[0-9]/.test(v))s++; if(/[^A-Za-z0-9]/.test(v))s++;
+  const bar=document.getElementById('passBar'); const w=[10,30,55,80,100][s];
+  bar.style.width=w+'%'; bar.style.background=['#EF4444','#F97316','#EAB308','#84CC16','#6D28D9'][s];
+  document.getElementById('passHint').textContent=['Too short','Weak — add more characters','Fair','Good','Strong password ✓'][s];
+});
+function setUser(name,email){
+  currentUser={name,email};
+  ['sideName','headName','profNameView','cardName'].forEach(id=>{const el=document.getElementById(id); if(el) el.textContent=name;});
+  document.getElementById('welcomeName').textContent=name.split(' ')[0];
+  document.getElementById('profName').value=name; document.getElementById('profEmail').value=email;
+}
+
+// ---------- SIDEBAR ----------
+const ICONS={
+ overview:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>',
+ events:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+ myevents:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>',
+ hackmate:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.4-1.3 4.2-3 5.5V17a3 3 0 0 1-3 3h-2a3 3 0 0 1-3-3v-2.5C6.3 13.2 5 11.4 5 9a7 7 0 0 1 7-7z"/></svg>',
+ ideacheck:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
+ certificates:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 13.5 17 22l-5-3-5 3 1.5-8.5"/></svg>',
+ card:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>',
+ rulebot:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M12 8V4M8 4h8"/><circle cx="9" cy="14" r="1"/><circle cx="15" cy="14" r="1"/></svg>',
+ guide:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+ comms:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>',
+ notifications:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
+ help:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+ profile:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+ logout:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>'
+};
+const NAV=[
+ {k:'overview',l:'Overview'},{k:'events',l:'Events'},{k:'myevents',l:'My Events'},{k:'hackmate',l:'HackMate AI'},{k:'ideacheck',l:'IdeaCheck AI'},{k:'certificates',l:'Certificates'},{k:'card',l:'Digital Card'},{k:'rulebot',l:'RuleBot AI'},{k:'guide',l:'Student Guide'},{k:'comms',l:'Official Communications'},{k:'notifications',l:'Notifications'},{k:'help',l:'Help & Support'},{k:'profile',l:'Profile'},{k:'logout',l:'Logout',logout:true}
+];
+const navEl=document.getElementById('sideNav');
+NAV.forEach(n=>{
+  const d=document.createElement('div');
+  d.className='sidebar-item'+(n.k==='overview'?' active':'')+(n.logout?' !text-red-500 mt-2 border-t pt-3':'');
+  d.dataset.key=n.k;
+  d.innerHTML=(ICONS[n.k]||'')+'<span>'+n.l+'</span>'+(n.k==='notifications'?'<span class="ml-auto bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">3</span>':'');
+  d.onclick=()=>{ if(n.logout){ toast('Logged out. See you soon!'); showPage('login'); } else { showDash(n.k); } toggleSidebar(false); };
+  navEl.appendChild(d);
+});
+function showDash(key){
+  document.querySelectorAll('.dash-section').forEach(s=>s.classList.remove('active'));
+  const sec=document.getElementById('dash-'+key); if(sec) sec.classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.toggle('active',i.dataset.key===key));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleSidebar(open){
+  const sb=document.getElementById('sidebar'), ov=document.getElementById('sideOverlay');
+  sb.classList.toggle('-translate-x-full',!open); ov.classList.toggle('hidden',!open);
+}
+
+// ---------- EVENTS DATA ----------
+let events=[
+ {id:1,title:'AI for Good Hackathon',date:'Mar 14 · 48 hours',mode:'Online',tag:'Live',img:'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop',desc:'Build AI solutions for social impact with mentors from industry.',prize:'₹50,000 prize pool'},
+ {id:2,title:'Web3 Builders Cup',date:'Mar 21 · 36 hours',mode:'Campus Hub',tag:'Upcoming',img:'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=600&h=400&fit=crop',desc:'Ship decentralised apps and smart contracts in a weekend sprint.',prize:'₹30,000 prize pool'},
+ {id:3,title:'Design & Code Jam',date:'Mar 28 · 24 hours',mode:'Hybrid',tag:'Upcoming',img:'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=400&fit=crop',desc:'Pair design and code to craft beautiful, usable products.',prize:'Certificates + swag'},
+ {id:4,title:'FinTech Innovation Challenge',date:'Apr 04 · 48 hours',mode:'Online',tag:'Upcoming',img:'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop',desc:'Reimagine payments, lending and personal finance for students.',prize:'₹40,000 prize pool'},
+ {id:5,title:'Smart Campus Hackathon',date:'Apr 11 · 36 hours',mode:'Campus Hub',tag:'Upcoming',img:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=400&fit=crop',desc:'IoT and AI for smarter campuses, hostels and classrooms.',prize:'₹25,000 prize pool'},
+ {id:6,title:'Open Source Sprint',date:'Feb 20 · Completed',mode:'Online',tag:'Completed',img:'https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=600&h=400&fit=crop',desc:'Contribute to real open-source projects with maintainer support.',prize:'Completed'}
+];
+let joined=new Set([1,3]);
+let activeFilter='All';
+function tagColor(t){ return t==='Live'?'bg-green-100 text-green-700':t==='Completed'?'bg-gray-100 text-gray-500':'bg-violet-100 text-brand'; }
+function eventCard(ev){
+  const isJ=joined.has(ev.id);
+  return `<div class="card-hover bg-white border rounded-[22px] overflow-hidden flex flex-col">
+    <div class="relative"><img src="${ev.img}" class="w-full h-[170px] object-cover"><span class="pill ${tagColor(ev.tag)} absolute top-3 left-3">${ev.tag}</span><span class="pill bg-black/70 text-white absolute top-3 right-3">${ev.mode}</span></div>
+    <div class="p-5 flex flex-col flex-1"><h3 class="font-display font-bold text-[17px] leading-snug">${ev.title}</h3><p class="text-xs text-gray-500 mt-1.5">${ev.date} · ${ev.prize}</p><p class="text-sm text-gray-600 mt-2 flex-1">${ev.desc}</p>
+    <button onclick="toggleJoin(${ev.id})" class="mt-4 w-full py-3 rounded-full text-sm font-bold ${isJ?'bg-lime text-black':'bg-black text-white'}">${isJ?'✓ Registered — Tap to leave':'Register →'}</button></div></div>`;
+}
+function renderEvents(){
+  const q=(document.getElementById('eventSearch')?.value||'').toLowerCase();
+  const gq=(document.getElementById('globalSearch')?.value||'').toLowerCase();
+  const list=events.filter(e=>(activeFilter==='All'||e.tag===activeFilter)&&(e.title.toLowerCase().includes(q)||e.title.toLowerCase().includes(gq)));
+  document.getElementById('allEvents').innerHTML=list.length?list.map(eventCard).join(''):'<p class="text-gray-500 text-sm col-span-3 py-8 text-center">No events match your search.</p>';
+  document.getElementById('overviewEvents').innerHTML=events.slice(0,3).map(eventCard).join('');
+}
+function renderMyEvents(){
+  const list=events.filter(e=>joined.has(e.id));
+  document.getElementById('statJoined').textContent=list.length+5;
+  document.getElementById('myEventsEmpty').classList.toggle('hidden',list.length>0);
+  document.getElementById('myEventsList').innerHTML=list.map(ev=>`
+    <div class="bg-white border rounded-[20px] p-5 flex flex-col sm:flex-row gap-4 items-start sm:items-center card-hover">
+      <img src="${ev.img}" class="w-full sm:w-28 h-24 object-cover rounded-2xl">
+      <div class="flex-1"><div class="flex gap-2 items-center"><h3 class="font-display font-bold">${ev.title}</h3><span class="pill bg-lime text-black">Registered</span></div>
+      <p class="text-sm text-gray-500 mt-1">${ev.date} · ${ev.mode}</p>
+      <div class="progress mt-3 max-w-xs"><div style="width:${ev.id===1?65:35}%;background:#6D28D9"></div></div><p class="text-xs text-gray-400 mt-1.5">${ev.id===1?'Team workspace 65% ready':'Workspace created — add your team'}</p></div>
+      <div class="flex gap-2"><button onclick="toast('Opening team workspace for ${ev.title.replace(/'/g,'')}')" class="bg-black text-white px-4 py-2.5 rounded-full text-sm font-bold">Workspace</button><button onclick="toggleJoin(${ev.id})" class="border px-4 py-2.5 rounded-full text-sm font-semibold">Leave</button></div>
+    </div>`).join('');
+}
+function toggleJoin(id){
+  if(joined.has(id)){ joined.delete(id); toast('Left event.'); } else { joined.add(id); toast('Registered! See it in My Events.'); }
+  renderEvents(); renderMyEvents();
+}
+document.querySelectorAll('.filter-btn').forEach(b=>b.onclick=()=>{
+  activeFilter=b.dataset.f;
+  document.querySelectorAll('.filter-btn').forEach(x=>{x.className='filter-btn bg-white border px-4 py-2 rounded-full text-sm font-semibold';});
+  b.className='filter-btn bg-black text-white px-4 py-2 rounded-full text-sm font-semibold';
+  renderEvents();
+});
+document.getElementById('eventSearch').addEventListener('input',renderEvents);
+document.getElementById('globalSearch').addEventListener('input',()=>{ if(document.getElementById('dash-events').classList.contains('active')) renderEvents(); });
+
+// ---------- HACKMATE CHAT ----------
+function sendChat(){ const inp=document.getElementById('chatInput'); const v=inp.value.trim(); if(!v)return; addMsg(v,true); inp.value=''; setTimeout(()=>addMsg(botReply(v),false),600); }
+function quickChat(v){ document.getElementById('chatInput').value=v; sendChat(); }
+function addMsg(text,user){
+  const box=document.getElementById('chatBox');
+  const div=document.createElement('div'); div.className='flex gap-3 '+(user?'justify-end':'');
+  div.innerHTML=user?`<div class="bg-brand text-white rounded-2xl rounded-tr-sm p-3.5 text-sm max-w-[80%]">${text}</div>`
+   :`<span class="w-9 h-9 rounded-full bg-brand text-white flex items-center justify-center font-black text-sm shrink-0">H</span><div class="bg-white border rounded-2xl rounded-tl-sm p-3.5 text-sm max-w-[80%]">${text}</div>`;
+  box.appendChild(div); box.scrollTop=box.scrollHeight;
+}
+function botReply(v){
+  v=v.toLowerCase();
+  if(v.includes('team')) return 'Great question! Share your skills (frontend, backend, design, AI) and I will suggest 2–3 teammates from your campus. You can also post a team invite in the event workspace.';
+  if(v.includes('demo')||v.includes('pitch')) return 'For demo day: open with the problem (30s), show a live working demo (90s), explain impact (30s), then close with what you would build next. Practice once with your team today!';
+  if(v.includes('plan')||v.includes('project')) return 'Here is a simple plan: 1) Validate with IdeaCheck AI, 2) Split into MVP features, 3) Build the core flow first, 4) Polish UI, 5) Record a 2-min demo. Want me to break this into tasks for your team?';
+  return 'Got it! I suggest starting with the smallest working version, validating your idea with IdeaCheck AI, and forming a team of 3–4 with complementary skills. Tell me your event deadline and I will map out a schedule.';
+}
+document.getElementById('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter')sendChat();});
+
+// ---------- IDEACHECK ----------
+function checkIdea(){
+  const t=document.getElementById('ideaText').value.trim();
+  if(t.length<20){ toast('Please describe your idea in a bit more detail.'); return; }
+  let score=65+Math.min(30,Math.floor(t.length/6)); if(t.toLowerCase().includes('student'))score+=3; if(t.toLowerCase().includes('campus'))score+=2;
+  score=Math.min(98,score);
+  document.getElementById('ideaScore').textContent=score+'/100';
+  document.getElementById('ideaVerdict').textContent= score>=85?'Strong idea! Clear impact and feasible scope. Build an MVP this weekend.':score>=72?'Good idea — tighten your target user and MVP scope, then validate with a teammate.':'Promising start. Clarify who it helps and simplify to one core feature.';
+  const imp=Math.min(98,score-4), fea=Math.min(96,score+2);
+  document.getElementById('impV').textContent=imp+'/100'; document.getElementById('impB').style.width=imp+'%';
+  document.getElementById('feaV').textContent=fea+'/100'; document.getElementById('feaB').style.width=fea+'%';
+  toast('Idea checked — score '+score+'/100');
+}
+
+// ---------- PROFILE ----------
+document.getElementById('profileForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  setUser(document.getElementById('profName').value.trim()||'Alex Carter', document.getElementById('profEmail').value.trim()||'alex@campuscode.edu');
+  toast('Profile saved successfully.');
+});
+
+renderEvents(); renderMyEvents();
+</script>
+</body>
+</html>
